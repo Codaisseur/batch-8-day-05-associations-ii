@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Room, type: :model do
+
   describe "validations" do
     it "is invalid without a home_type" do
       room = Room.new(home_type: "")
@@ -54,6 +55,18 @@ RSpec.describe Room, type: :model do
       expect(room.themes).to include(theme1)
       expect(room.themes).to include(theme2)
       expect(room.themes).to include(theme3)
+    end
+  end
+
+  describe "association with booking" do
+    let(:guest_user) { create :user, email: "guest@user.com" }
+    let(:host_user) { create :user, email: "host@user.com" }
+
+    let!(:room) { create :room, user: host_user }
+    let!(:booking) { create :booking, room: room, user: guest_user }
+
+    it "has guests" do
+      expect(room.guests).to include(guest_user)
     end
   end
 end

@@ -2,6 +2,12 @@ class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :room
 
+  before_save :set_total_price
+
+  def room_available?
+    room.available? starts_at, ends_at
+  end
+
   def set_total_price
     self.price = room.price
     total_days = (ends_at.to_date - starts_at.to_date).to_i
